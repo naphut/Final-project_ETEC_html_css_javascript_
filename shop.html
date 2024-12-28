@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Showcase</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        #New .box-card .row .col-xl-4:nth-child(1) {
+            display: none;
+        }
+
+        h2 {
+            text-transform: uppercase;
+        }
+
+        .category ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category ul li {
+            width: 90%;
+            padding: 15px 10px;
+        }
+
+        .category ul li:nth-child(2), .category ul li:nth-child(4) {
+            background-color: rgb(239, 201, 8);
+        }
+
+        .category ul li a {
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .price {
+            display: flex;
+            gap: 15px;
+        }
+
+        .icon i {
+            font-size: 1.5rem;
+            color: gold;
+            margin-right: 2px;
+        }
+
+        .icon i:hover {
+            transform: scale(1.2);
+            color: orange;
+        }
+
+        @media (max-width: 575.98px) {
+            #New .box-card .row .col-xl-4:nth-child(1) {
+                display: block;
+            }
+
+            .category h2 {
+                text-align: center;
+            }
+
+            .price {
+                display: flex;
+                justify-content: center;
+            }
+
+            #relate {
+                display: none;
+            }
+        }
+        .category ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
+.category ul li {
+    width: 90%;
+    margin: 5px auto;
+    padding: 15px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.category ul li:hover {
+    background-color: rgb(239, 201, 8);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.category ul li a {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #333;
+    font-weight: bold;
+    display: block;
+}
+
+.category ul li:nth-child(2), 
+.category ul li:nth-child(4) {
+    background-color: rgb(239, 201, 8);
+    color: #fff;
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-xl-8">
+                <article id="New">
+                    <div class="box-card" id="newpro">
+                        <h2 class="text-center">New Products</h2>
+                        <div class="row" id="newShop"></div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-12 col-xl-4">
+                <div class="category py-5">
+                    <h2 class="mb-3">CATEGORIES</h2>
+                    <ul>
+                      <li class="category-item" data-category="Man"><a href="#">Man</a></li>
+                      <li class="category-item" data-category="Woman"><a href="#">Woman</a></li>
+                      <li class="category-item" data-category="Boy"><a href="#">Boy</a></li>
+                      <li class="category-item" data-category="Girl"><a href="#">Girl</a></li>
+                  </ul>
+                  
+                    <h2>PROMOTIONS</h2>
+                    <div class="price ps-3">
+                        <button class="btn btn-outline-danger my-3">Promotion</button>
+                    </div>
+                    <h2>PRICE</h2>
+                    <div class="price w-100 ps-3">
+                        <button class="btn btn-outline-warning">Low Price</button>
+                        <button class="btn btn-outline-warning">High Price</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <article id="relate" class="py-5">
+            <div class="box-card container">
+                <h2 class="text-center">Related Products</h2>
+                <div class="row" id="relatedProduct"></div>
+            </div>
+        </article> -->
+    </div>
+
+    <script type="module">
+        import { products } from './data.js';
+
+        $(document).ready(() => {
+            const generateRating = (rating) => {
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= rating) {
+                        stars += '<i class="bi bi-star-fill"></i>'; // Filled star
+                    } else {
+                        stars += '<i class="bi bi-star"></i>'; // Empty star
+                    }
+                }
+                return stars;
+            };
+
+            const generateCard = (product) => {
+                const stars = generateRating(product.rating || 5); // Assuming a rating property
+                if (product.reqular_price === 0) {
+                    return `
+                        <div class="col-6 col-xl-4 mt-3">
+                            <div class="card">
+                                <div class="image">
+                                    <img class="w-100" src="${product.image}" alt="">
+                                </div>
+                                <div class="title p-2">
+                                    <span><b>US ${product.sale_price}</b></span>
+                                    <p>${product.title}</p>
+                                    <div class="icon">${stars}</div>
+                                </div>
+                            </div>
+                        </div>`;
+                } else {
+                    return `
+                        <div class="col-6 col-xl-4 mt-3">
+                            <div class="card">
+                                <div class="promotion">
+                                    <span>Promotion</span>
+                                </div>
+                                <div class="image">
+                                    <img class="w-100" src="${product.image}" alt="">
+                                </div>
+                                <div class="title p-2">
+                                    <del class="text-danger"><b>US ${product.reqular_price}</b></del>
+                                    <span class="ms-3"><b>US ${product.sale_price}</b></span>
+                                    <p>${product.title}</p>
+                                    <div class="icon">${stars}</div>
+                                </div>
+                            </div>
+                        </div>`;
+                }
+            };
+
+            const getNewProduct = () => {
+                let card = '';
+                products.forEach((val, index) => {
+                    if (index < 4) {
+                        card += generateCard(val);
+                    }
+                });
+                $('#newShop').html(card);
+            };
+
+            const displayPromotions = () => {
+                const promotionProducts = products.filter(
+                    (product) => product.reqular_price > product.sale_price
+                );
+                let card = '';
+                promotionProducts.forEach((product) => {
+                    card += generateCard(product);
+                });
+                $('#newShop').html(card);
+            };
+
+            const displayLowPrice = () => {
+                const sortedProducts = products
+                    .slice()
+                    .sort((a, b) => a.sale_price - b.sale_price);
+                if (sortedProducts.length > 0) {
+                    let card = '';
+                    sortedProducts.forEach((product) => {
+                        card += generateCard(product);
+                    });
+                    $('#newShop').html(card);
+                } else {
+                    $('#newShop').html('<p class="text-center">No products available.</p>');
+                }
+            };
+
+            const displayHighPrice = () => {
+                const sortedProducts = products
+                    .slice()
+                    .sort((a, b) => b.sale_price - a.sale_price);
+                if (sortedProducts.length > 0) {
+                    let card = '';
+                    sortedProducts.forEach((product) => {
+                        card += generateCard(product);
+                    });
+                    $('#newShop').html(card);
+                } else {
+                    $('#newShop').html('<p class="text-center">No products available.</p>');
+                }
+            };
+
+            // Event listeners
+            $('.btn-outline-danger').click(() => {
+                displayPromotions();
+            });
+
+            $('.btn-outline-warning').first().click(() => {
+                displayLowPrice();
+            });
+
+            $('.btn-outline-warning').last().click(() => {
+                displayHighPrice();
+            });
+
+            getNewProduct();
+        });
+
+        $(document).ready(() => {
+    const generateRating = (rating) => {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+            stars += i <= rating ? '<i class="bi bi-star-fill"></i>' : '<i class="bi bi-star"></i>';
+        }
+        return stars;
+    };
+
+    const generateCard = (product) => {
+        const stars = generateRating(product.rating || 5);
+        const promotionBadge = product.reqular_price > product.sale_price ? `<div class="promotion"><span>Promotion</span></div>` : '';
+        const regularPrice = product.reqular_price > 0 ? `<del class="text-danger"><b>US ${product.reqular_price}</b></del>` : '';
+        const salePrice = `<span class="ms-3"><b>US ${product.sale_price}</b></span>`;
+
+        return `
+            <div class="col-6 col-xl-4 mt-3">
+                <div class="card">
+                    ${promotionBadge}
+                    <div class="image">
+                        <img class="w-100" src="${product.image}" alt="${product.title}">
+                    </div>
+                    <div class="title p-2">
+                        ${regularPrice} ${salePrice}
+                        <p>${product.title}</p>
+                        <div class="icon">${stars}</div>
+                    </div>
+                </div>
+            </div>`;
+    };
+
+    const displayProducts = (filterCallback) => {
+        const filteredProducts = filterCallback(products);
+        let cards = '';
+        if (filteredProducts.length > 0) {
+            filteredProducts.forEach((product) => {
+                cards += generateCard(product);
+            });
+        } else {
+            cards = '<p class="text-center">No products available.</p>';
+        }
+        $('#newShop').html(cards);
+    };
+
+    const filterByCategory = (category) => {
+        displayProducts((products) => products.filter((product) => product.category === category));
+    };
+
+    $('.category-item').click(function () {
+        const category = $(this).data('category');
+        filterByCategory(category);
+    });
+
+    // Initialize with new products
+    displayProducts(() => products.slice(0, 4));
+});
+
+    </script>
+</body>
+</html>
